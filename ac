@@ -22,9 +22,22 @@ hora=$(date "+%H")
 minutos=$(date "+%M")
 
 menu() {
+
+    sem=$(semestre)
+
     echo "################################################################"
     printf "# %-60s #\n" "  IBMEC "
-    	
+    printf "# %-60s #\n" "  Sistemas Operacionais                   Semestre $sem de $ano"
+    printf "# %-60s #\n" "  Código: IBM8940                         Turma: 8001"
+    printf "# %-60s #\n" "  Professor: Luiz Fernando T. de Farias "
+    printf "# %-60s #\n" "------------------------------------------------------------------------"
+    printf "# %-60s #\n" "  Equipe Desenvolvedora: "
+    printf "# %-60s #\n" "     Aluno: Filipe Gama "
+    printf "# %-60s #\n" "     Aluno: Bernardo Mascarenhas "
+    printf "# %-60s #\n" "     Aluno: Marcio Moreira "
+    printf "# %-60s #\n" "------------------------------------------------------------------------"
+    printf "# %-60s #\n" "  Rio de Janeiro, $dia de $mes de $ano "
+    printf "# %-60s #\n" "  Hora do Sistema: $hora Horas e $minutos Minutos "
     echo "################################################################"
 }
 
