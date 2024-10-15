@@ -23,12 +23,22 @@ minutos=$(date "+%M")
 
 menu() {
     echo "################################################################"
-    # Seu código de menu aqui
+    printf "# %-60s #\n" "  IBMEC "
+    	
     echo "################################################################"
 }
 
+escolhas() {
+	echo "Escolha uma opção"
+	echo "   1)opçao 1"
+	echo "   2)opcao 2"
+	echo "   3)"
+	echo "   4)"
+	echo "   5) Para finalizar o programa"
+}
 while true; do
     menu
+    escolhas
     read -r opcao
 
     case $opcao in
@@ -44,8 +54,13 @@ while true; do
         4)
             # código da opção 4
             ;;
+    	5)
+	    echo "Finalizando o programa"
+    	    break
+	    ;;		    
         *)
             echo "opção inválida, tente novamente"
             ;;
     esac
 done
+
