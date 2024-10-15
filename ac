@@ -24,8 +24,36 @@ minutos = $(date "+%M")
 menu() {
 	echo "################################################################"
 	
-	
+		
 
 	echo "################################################################"
 }	
+
+
+while true; do
+	menu
+	read -r opcao
+
+	case $opcao in
+		1)
+			#codigo da opcao interativa aqui
+			;;
+		2)	
+
+			#mesmo
+			;;
+		3)
+			#mesmo
+			;;
+		4) 
+			#mesmo
+			;;
+		*)
+			echo "opção inválida, tente novamente"
+			;;
+	esac
+done	
+
+
+
 
