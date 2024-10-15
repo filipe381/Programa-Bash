@@ -1,2 +1,31 @@
-!/bin/bash
+#!/bin/bash
+
+msg_trap() {
+	echo "Não pode sair desta forma"
+}	
+
+trap msg_trap SIGNIT SIGTERM
+
+semestre() {
+	mes=$(date "+%m")
+	if(( mes < 7 )); then
+		echo "1"
+	else	
+		echo "2"
+	fi
+}
+
+ano = $(date "+%Y")
+dia = $(date "+%d")
+mes = $(date "+%B")
+hora = $(date "+%H")
+minutos = $(date "+%M")
+
+menu() {
+	echo "################################################################"
+	
+	
+
+	echo "################################################################"
+}	
 
