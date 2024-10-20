@@ -4,7 +4,7 @@ msg_trap() {
     echo "Não pode sair desta forma"
 }
 
-trap msg_trap SIGINT SIGTERM
+trap msg_trap SIGINT SIGTERM SIGTSTP
 
 semestre() {
     mes=$(date "+%m")
@@ -14,6 +14,8 @@ semestre() {
         echo "2"
     fi
 }
+
+
 
 ano=$(date "+%Y")
 dia=$(date "+%d")
@@ -43,7 +45,7 @@ menu() {
 
 escolhas() {
 	echo "Escolha uma opção"
-	echo "   1)opçao 1"
+	echo "   1)Monitoramento da cpu e memoria"
 	echo "   2)opcao 2"
 	echo "   3)"
 	echo "   4)"
@@ -57,6 +59,61 @@ while true; do
     case $opcao in
         1)
             # código da opção 1
+
+# Função para monitorar temperatura da CPU
+monitor_temperatura() {
+    echo "=== Temperatura da CPU ==="
+    
+    echo " Em Produção"
+}
+
+monitor_memoria() {
+    echo "=== Uso de Memória ==="
+    echo "Aqui estão os detalhes sobre a memória do sistema:"
+    mem_info=$(free -h)
+    echo "$mem_info"
+
+    total_memory=$(echo "$mem_info" | awk 'NR==2{print $2}')  # Total
+    used_memory=$(echo "$mem_info" | awk 'NR==2{print $3}')   # Usada
+    free_memory=$(echo "$mem_info" | awk 'NR==2{print $4}')   # Livre
+
+    echo "Total de Memória: $total_memory"
+    echo "Memória Usada: $used_memory"
+    echo "Memória Livre: $free_memory"
+    echo "Isso significa que a memória usada é a quantidade de RAM atualmente em uso, enquanto a memória livre está disponível para novos aplicativos."
+    echo ""
+}
+
+monitor_cpu() {
+    echo "=== Uso da CPU ==="
+    cpu_usage=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')  # Captura %us + %sy
+    echo "Uso total da CPU: ${cpu_usage}%"
+
+    # Explicação dos valores
+    echo "O uso total da CPU indica a porcentagem de tempo que a CPU está ativa e processando dados."
+    echo "Valores mais altos significam que a CPU está sendo muito utilizada, enquanto valores mais baixos indicam que está mais ociosa."
+    echo ""
+}
+
+# Loop para monitorar em tempo real
+while true; do
+    clear
+    monitor_temperatura
+    monitor_memoria
+    monitor_cpu
+
+    # Pergunta ao usuário se deseja continuar ou sair
+    read -t 4 -p "Digite 'exit' para sair ou pressione Enter para continuar: " user_input
+    if [[ "$user_input" == "exit" ]]; then
+        echo "Saindo do monitoramento..."
+        break
+    fi
+
+done
+
+
+
+	
             ;;
         2)
             # código da opção 2
@@ -76,4 +133,7 @@ while true; do
             ;;
     esac
 done
+
+
+
 
