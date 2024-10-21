@@ -60,12 +60,6 @@ while true; do
         1)
             # código da opção 1
 
-# Função para monitorar temperatura da CPU
-monitor_temperatura() {
-    echo "=== Temperatura da CPU ==="
-    
-    echo " Em Produção"
-}
 
 monitor_memoria() {
     echo "=== Uso de Memória ==="
@@ -98,7 +92,6 @@ monitor_cpu() {
 # Loop para monitorar em tempo real
 while true; do
     clear
-    monitor_temperatura
     monitor_memoria
     monitor_cpu
 
