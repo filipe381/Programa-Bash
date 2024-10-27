@@ -38,6 +38,7 @@ menu() {
     printf "# %-60s #\n" "     Aluno: Bernardo Mascarenhas "
     printf "# %-60s #\n" "     Aluno: Marcio Moreira "
     printf "# %-60s #\n" "------------------------------------------------------------"
+
     printf "# %-60s #\n" "  Rio de Janeiro, $dia de $mes de $ano "
     printf "# %-60s #\n" "  Hora do Sistema: $hora Horas e $minutos Minutos "
     echo "################################################################"
@@ -46,7 +47,7 @@ menu() {
 escolhas() {
 	echo "Escolha uma opção"
 	echo "   1)Monitoramento da cpu e memoria"
-	echo "   2)opcao 2"
+	echo "   2)Permissões dos arquivos"
 	echo "   3)"
 	echo "   4)"
 	echo "   5) Para finalizar o programa"
@@ -80,22 +81,19 @@ monitor_memoria() {
 
 monitor_cpu() {
     echo "=== Uso da CPU ==="
-    cpu_usage=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')  # Captura %us + %sy
+    cpu_usage=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}') 
     echo "Uso total da CPU: ${cpu_usage}%"
 
-    # Explicação dos valores
     echo "O uso total da CPU indica a porcentagem de tempo que a CPU está ativa e processando dados."
     echo "Valores mais altos significam que a CPU está sendo muito utilizada, enquanto valores mais baixos indicam que está mais ociosa."
     echo ""
 }
 
-# Loop para monitorar em tempo real
 while true; do
     clear
     monitor_memoria
     monitor_cpu
 
-    # Pergunta ao usuário se deseja continuar ou sair
     read -t 4 -p "Digite 'exit' para sair ou pressione Enter para continuar: " user_input
     if [[ "$user_input" == "exit" ]]; then
         echo "Saindo do monitoramento..."
@@ -110,6 +108,69 @@ done
             ;;
         2)
             # código da opção 2
+		clear
+	listar_arquivos() {
+    echo "Digite o diretório que deseja listar (ou pressione Enter para o diretório atual):"
+    read dir
+    dir=${dir:-.}  # Usa o diretório atual se o usuário pressionar Enter
+
+    # Expande o caminho e verifica se é um diretório válido
+    dir=$(eval echo "$dir")
+    if [ -d "$dir" ]; then
+        echo "Arquivos em $dir:"
+        echo "---------------------------------"
+        # Lista o conteúdo do diretório com informações de dono, grupo e permissões
+        ls -l "$dir" | awk '{print $9 ": Dono=" $3 ", Grupo=" $4 ", Permissões=" $1}'
+        echo "---------------------------------"
+    else
+        echo "Diretório inválido. Tente novamente."
+    fi
+}
+
+modificar_permissoes() {
+    echo "Digite o caminho do arquivo para alterar permissões:"
+    read file
+	file=$(eval echo "$file")
+    if [ -e "$file" ]; then
+        echo "Permissões atuais de $file:"
+        ls -l "$file" | awk '{print "Dono=" $3 ", Grupo=" $4 ", Permissões=" $1}'
+
+        echo "Digite as novas permissões (formato octal, ex: 755):"
+        read permissoes
+
+        chmod "$permissoes" "$file"
+        echo "Permissões alteradas. Novas permissões:"
+        ls -l "$file" | awk '{print "Dono=" $3 ", Grupo=" $4 ", Permissões=" $1}'
+    else
+        echo "Arquivo não encontrado. Tente novamente."
+    fi
+}
+
+
+while true; do
+    echo "Escolha uma opção:"
+    echo "1) Listar arquivos e exibir dono, grupo e permissões"
+    echo "2) Modificar permissões de um arquivo"
+    echo "3) Sair"
+    read opcao
+
+    case $opcao in
+        1)
+            listar_arquivos
+            ;;
+        2)
+            modificar_permissoes
+            ;;
+        3)
+            echo "Saindo..."
+            break
+            ;;
+        *)
+            echo "Opção inválida. Tente novamente."
+            ;;
+    esac
+done
+
             ;;
         3)
             # código da opção 3
@@ -126,7 +187,6 @@ done
             ;;
     esac
 done
-
 
 
 
