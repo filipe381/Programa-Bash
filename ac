@@ -109,7 +109,7 @@ done
         2)
             # código da opção 2
 		clear
-	listar_arquivos() {
+listar_arquivos() {
     echo "Digite o diretório que deseja listar (ou pressione Enter para o diretório atual):"
     read dir
     dir=${dir:-.}  # Usa o diretório atual se o usuário pressionar Enter
@@ -119,8 +119,12 @@ done
     if [ -d "$dir" ]; then
         echo "Arquivos em $dir:"
         echo "---------------------------------"
-        # Lista o conteúdo do diretório com informações de dono, grupo e permissões
-        ls -l "$dir" | awk '{print $9 ": Dono=" $3 ", Grupo=" $4 ", Permissões=" $1}'
+        # Tenta listar o conteúdo do diretório; captura erro se não for acessível
+        if ! ls -l "$dir" 2>/dev/null; then
+            echo "Erro: Você não tem permissão para acessar o diretório $dir."
+        else
+            ls -l "$dir" | awk '{print $9 ": Dono=" $3 ", Grupo=" $4 ", Permissões=" $1}'
+        fi
         echo "---------------------------------"
     else
         echo "Diretório inválido. Tente novamente."
@@ -130,22 +134,33 @@ done
 modificar_permissoes() {
     echo "Digite o caminho do arquivo para alterar permissões:"
     read file
-	file=$(eval echo "$file")
+    file=$(eval echo "$file")
+
     if [ -e "$file" ]; then
+        if ! ls -l "$file" 2>/dev/null; then
+            echo "Erro: Você não tem permissão para acessar o arquivo $file."
+            return
+        fi
+
         echo "Permissões atuais de $file:"
         ls -l "$file" | awk '{print "Dono=" $3 ", Grupo=" $4 ", Permissões=" $1}'
 
-        echo "Digite as novas permissões (formato octal, ex: 755):"
+        echo "Digite as novas permissões (formato octal, ex: 755)
+	para dono, grupo e outros respectivamente:"
         read permissoes
 
-        chmod "$permissoes" "$file"
-        echo "Permissões alteradas. Novas permissões:"
-        ls -l "$file" | awk '{print "Dono=" $3 ", Grupo=" $4 ", Permissões=" $1}'
+       
+        chmod "$permissoes" "$file" 2>/dev/null
+        if [ $? -ne 0 ]; then
+            echo "Erro: Você não tem permissão para alterar as permissões de $file."
+        else
+            echo "Permissões alteradas com sucesso. Novas permissões:"
+            ls -l "$file" | awk '{print "Dono=" $3 ", Grupo=" $4 ", Permissões=" $1}'
+        fi
     else
         echo "Arquivo não encontrado. Tente novamente."
     fi
 }
-
 
 while true; do
     echo "Escolha uma opção:"
