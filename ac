@@ -189,6 +189,44 @@ done
             ;;
         3)
             # código da opção 3
+	    #!/bin/bash
+
+while true; do
+    # Limpa a tela para exibir uma nova lista de processos
+    clear
+
+    echo "################################################################"
+    printf "# %-60s #\n" "  IBMEC "
+    printf "# %-60s #\n" "                    Gerenciador de Tarefas "
+    echo "################################################################"
+    echo
+    echo "Lista de processos (PID, CPU%, MEM%, Nome):"
+    echo
+
+    # Lista os processos com PID, uso de CPU, uso de Memória e Nome do Processo
+    ps -e -o pid,%cpu,%mem,comm --sort=-%mem | head -n 15
+
+    echo
+    echo "Digite o PID do processo que deseja encerrar (ou 'q' para sair):"
+    read -r pid
+
+    # Verifica se o usuário quer sair
+    if [[ "$pid" == "q" ]]; then
+        echo "Saindo do Gerenciador de Tarefas..."
+        break
+    fi
+
+    # Tenta encerrar o processo com o PID informado
+    if kill "$pid" 2>/dev/null; then
+        echo "Processo com PID $pid encerrado com sucesso."
+    else
+        echo "Falha ao encerrar o processo. Verifique o PID e tente novamente."
+    fi
+
+    # Pausa para que o usuário veja a mensagem
+    sleep 2
+done
+
             ;;
         4)
             # código da opção 4
