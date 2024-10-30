@@ -48,7 +48,7 @@ escolhas() {
 	echo "Escolha uma opção"
 	echo "   1)Monitoramento da cpu e memoria"
 	echo "   2)Permissões dos arquivos"
-	echo "   3)"
+	echo "   3)Gerenciador de Processos"
 	echo "   4)"
 	echo "   5) Para finalizar o programa"
 }
@@ -196,8 +196,9 @@ while true; do
     clear
 
     echo "################################################################"
-    printf "# %-60s #\n" "  IBMEC "
+    printf "# %-60s #\n" "   "
     printf "# %-60s #\n" "                    Gerenciador de Tarefas "
+    printf "# %-60s #\n" " "
     echo "################################################################"
     echo
     echo "Lista de processos (PID, CPU%, MEM%, Nome):"
