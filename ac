@@ -230,7 +230,55 @@ done
 
             ;;
         4)
-            # código da opção 4
+            echo "Digite o diretório de destino para o backup:"
+read destino
+
+# Verifica se o diretório existe, caso contrário, cria-o
+if [ ! -d "$destino" ]; then
+    mkdir -p "$destino"
+    echo "Diretório de destino criado em $destino"
+fi
+
+# Cria uma lista para armazenar os arquivos
+arquivos=()
+
+# Solicita ao usuário os arquivos que deseja adicionar ao backup
+while true; do
+    echo "Digite o caminho do arquivo para incluir no backup (ou 'sair' para finalizar):"
+    read arquivo
+
+    # Verifica se o usuário deseja sair
+    if [ "$arquivo" = "sair" ]; then
+        break
+    fi
+
+    # Verifica se o arquivo existe
+    if [ -f "$arquivo" ]; then
+        arquivos+=("$arquivo")
+    else
+        echo "Arquivo $arquivo não encontrado."
+        echo "1) Digitar novamente o arquivo"
+        echo "2) Sair"
+        
+        # Lê a escolha do usuário
+        read escolha
+        
+        if [ "$escolha" = "2" ]; then
+            break
+        elif [ "$escolha" != "1" ]; then
+            echo "Opção inválida. Voltando para o início do loop."
+        fi
+    fi
+done
+
+# Define o nome do arquivo de backup com base na data e hora atuais
+backup_nome="backup_$(date +%Y%m%d_%H%M%S).tar.gz"
+backup_destino="$destino/$backup_nome"
+
+# Cria o arquivo de backup usando tar
+tar -czf "$backup_destino" "${arquivos[@]}"
+
+echo "Backup criado com sucesso em $backup_destino!"
             ;;
     	5)
 	    echo "Finalizando o programa"
