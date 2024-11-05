@@ -189,7 +189,6 @@ done
             ;;
         3)
             # código da opção 3
-	    #!/bin/bash
 
 while true; do
     # Limpa a tela para exibir uma nova lista de processos
@@ -230,65 +229,66 @@ done
 
             ;;
         4)
-            echo "Digite o diretório de destino para o backup:"
-read destino
 
-# Verifica se o diretório existe, caso contrário, cria-o
-if [ ! -d "$destino" ]; then
-    mkdir -p "$destino"
-    echo "Diretório de destino criado em $destino"
-fi
-
-# Cria uma lista para armazenar os arquivos
-arquivos=()
-
-# Solicita ao usuário os arquivos que deseja adicionar ao backup
-while true; do
-    echo "Digite o caminho do arquivo para incluir no backup (ou 'sair' para finalizar):"
+# Função para criar um backup do arquivo
+backup_arquivo() {
+    echo "Digite o caminho completo do arquivo que deseja fazer o backup:"
     read arquivo
+    arquivo=$(eval echo "$arquivo")
 
-    # Verifica se o usuário deseja sair
-    if [ "$arquivo" = "sair" ]; then
-        break
+    # Verifica se o arquivo existe e é acessível
+    if [ ! -f "$arquivo" ]; then
+        echo "Erro: Arquivo não encontrado ou inacessível. Tente novamente."
+        return
     fi
 
-    # Verifica se o arquivo existe
-    if [ -f "$arquivo" ]; then
-        arquivos+=("$arquivo")
-    else
-        echo "Arquivo $arquivo não encontrado."
-        echo "1) Digitar novamente o arquivo"
-        echo "2) Sair"
-        
-        # Lê a escolha do usuário
-        read escolha
-        
-        if [ "$escolha" = "2" ]; then
-            break
-        elif [ "$escolha" != "1" ]; then
-            echo "Opção inválida. Voltando para o início do loop."
+    echo "Digite o diretório de destino para o backup:"
+    read destino
+    destino=$(eval echo "$destino")
+
+    # Cria o diretório de destino se ele não existir
+    if [ ! -d "$destino" ]; then
+        echo "Diretório de destino não existe. Criando $destino..."
+        mkdir -p "$destino" 2>/dev/null
+        if [ $? -ne 0 ]; then
+            echo "Erro: Não foi possível criar o diretório de destino. Verifique as permissões."
+            return
         fi
     fi
-done
 
-# Define o nome do arquivo de backup com base na data e hora atuais
-backup_nome="backup_$(date +%Y%m%d_%H%M%S).tar.gz"
-backup_destino="$destino/$backup_nome"
+    # Define o nome do arquivo de backup
+    nome_backup=$(basename "$arquivo")
+    data=$(date +%Y%m%d_%H%M%S)
+    backup_path="$destino/${nome_backup}_backup_$data.tar.gz"
 
-# Cria o arquivo de backup usando tar
-tar -czf "$backup_destino" "${arquivos[@]}"
+    # Realiza o backup usando tar
+    tar -czf "$backup_path" "$arquivo" 2>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "Erro: Não foi possível criar o backup. Verifique as permissões."
+    else
+        echo "Backup criado com sucesso em: $backup_path"
+    fi
+}
 
-echo "Backup criado com sucesso em $backup_destino!"
+# Menu principal
+while true; do
+	clear
+    echo "Escolha uma opção:"
+    echo "1) Fazer backup de um arquivo"
+    echo "2) Sair"
+    read opcao
+
+    case $opcao in
+        1)
+            backup_arquivo
             ;;
-    	5)
-	    echo "Finalizando o programa"
-    	    break
-	    ;;		    
+        2)
+            echo "Saindo..."
+            break
+            ;;
         *)
-            echo "opção inválida, tente novamente"
+            echo "Opção inválida. Tente novamente."
             ;;
     esac
 done
-
-
-
+done
