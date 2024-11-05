@@ -49,7 +49,7 @@ escolhas() {
 	echo "   1)Monitoramento da cpu e memoria"
 	echo "   2)Permissões dos arquivos"
 	echo "   3)Gerenciador de Processos"
-	echo "   4)"
+	echo "   4)Realizar Backup De Arquivos"
 	echo "   5) Para finalizar o programa"
 }
 while true; do
@@ -229,9 +229,10 @@ done
 
             ;;
         4)
-
+		clear
 # Função para criar um backup do arquivo
 backup_arquivo() {
+	
     echo "Digite o caminho completo do arquivo que deseja fazer o backup:"
     read arquivo
     arquivo=$(eval echo "$arquivo")
@@ -249,7 +250,7 @@ backup_arquivo() {
     # Cria o diretório de destino se ele não existir
     if [ ! -d "$destino" ]; then
         echo "Diretório de destino não existe. Criando $destino..."
-        mkdir -p "$destino" 2>/dev/null
+        mkdir "$destino" 2>/dev/null
         if [ $? -ne 0 ]; then
             echo "Erro: Não foi possível criar o diretório de destino. Verifique as permissões."
             return
@@ -269,10 +270,8 @@ backup_arquivo() {
         echo "Backup criado com sucesso em: $backup_path"
     fi
 }
-
-# Menu principal
+            # Menu principal
 while true; do
-	clear
     echo "Escolha uma opção:"
     echo "1) Fazer backup de um arquivo"
     echo "2) Sair"
@@ -291,4 +290,15 @@ while true; do
             ;;
     esac
 done
+		;;
+        5)
+            echo "Saindo do programa..."
+            exit 0
+            ;;
+        *)
+            echo "Opção inválida. Tente novamente."
+            ;;
+    esac
 done
+
+# Função para criar um backup do ar
